@@ -616,7 +616,8 @@ audio {
   display: inline-flex;
   justify-content: center;
   line-height: 1;
-  transition: transform 0.3s;
+  opacity: 0.82;
+  transition: opacity 0.2s;
 }
 
 .social-icon svg {
@@ -625,7 +626,7 @@ audio {
 }
 
 .social-icon:hover {
-  transform: scale(1.08);
+  opacity: 1;
 }
 
 .catalog-empty {
