@@ -10,6 +10,7 @@ type AuthStep = "email" | "sign-in-password" | "sign-in-code" | "sign-up-passwor
 
 type CustomAuthFormProps = {
   mode: AuthMode;
+  initialReason?: string;
 };
 
 type FirstFactor = {
@@ -17,7 +18,7 @@ type FirstFactor = {
   emailAddressId?: string;
 };
 
-export function CustomAuthForm({ mode }: CustomAuthFormProps) {
+export function CustomAuthForm({ mode, initialReason }: CustomAuthFormProps) {
   const router = useRouter();
   const signInState = useSignIn();
   const signUpState = useSignUp();
@@ -31,9 +32,11 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
   const isSignIn = mode === "sign-in";
   const title = isSignIn ? "Sign in to Gridworld Streaming" : "Create your Gridworld Streaming account";
   const subtitle = isSignIn ? "Enter your email to continue." : "Use your email to start an account.";
+  const googleLabel = isSignIn ? "Sign in with Google" : "Create account with Google";
   const alternateHref = isSignIn ? "/sign-up" : "/sign-in";
   const alternateText = isSignIn ? "Need an account?" : "Already have an account?";
   const alternateAction = isSignIn ? "Create one" : "Sign in";
+  const notice = error || getAuthNotice(initialReason, isSignIn);
 
   const finishAuth = async (sessionId: string | null | undefined) => {
     if (!sessionId) {
@@ -61,7 +64,10 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
 
     await submit(async () => {
       if (isSignIn) {
-        const result = await signInState.signIn.create({ identifier: emailAddress.trim() });
+        const result = await signInState.signIn.create({
+          identifier: emailAddress.trim(),
+          signUpIfMissing: false,
+        });
 
         if (result.status === "complete") {
           await finishAuth(result.createdSessionId);
@@ -71,6 +77,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
         const factors = (result.supportedFirstFactors ?? []) as FirstFactor[];
         const passwordFactor = factors.find((factor) => factor.strategy === "password");
         const emailCodeFactor = factors.find((factor) => factor.strategy === "email_code");
+        const resetPasswordFactor = factors.find((factor) => factor.strategy.startsWith("reset_password_"));
 
         if (passwordFactor) {
           setStep("sign-in-password");
@@ -83,6 +90,13 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
             emailAddressId: emailCodeFactor.emailAddressId,
           });
           setStep("sign-in-code");
+          return;
+        }
+
+        if (resetPasswordFactor || result.status === "needs_new_password") {
+          setError(
+            "This email has an account, but password sign-in is not set up yet. Use Google with this email, or create an account to finish setup.",
+          );
           return;
         }
 
@@ -235,7 +249,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
         disabled={!isLoaded || isSubmitting}
       >
         <span aria-hidden="true">G</span>
-        Continue with Google
+        {googleLabel}
       </button>
 
       <div className="custom-auth-divider">
@@ -318,7 +332,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
         </form>
       ) : null}
 
-      {error ? <p className="custom-auth-error">{error}</p> : null}
+      {notice ? <p className="custom-auth-error">{notice}</p> : null}
 
       <p className="custom-auth-footer">
         {alternateText} <Link href={alternateHref}>{alternateAction}</Link>
@@ -328,6 +342,20 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
 }
 
 function getAuthErrorMessage(error: unknown) {
+  const code = getAuthErrorCode(error);
+
+  if (code === "form_identifier_not_found" || code === "external_account_not_found") {
+    return "No Gridworld account exists for that email yet. Create an account to continue.";
+  }
+
+  if (
+    code === "form_identifier_exists" ||
+    code === "form_identifier_exists__email_address" ||
+    code === "identifier_already_exists"
+  ) {
+    return "A Gridworld account already exists for that email. Sign in instead.";
+  }
+
   if (
     error &&
     typeof error === "object" &&
@@ -345,4 +373,36 @@ function getAuthErrorMessage(error: unknown) {
   }
 
   return "Unable to complete authentication.";
+}
+
+function getAuthNotice(reason: string | undefined, isSignIn: boolean) {
+  if (reason === "google-no-account") {
+    return "No Gridworld account is connected to that Google address yet. Create an account to continue.";
+  }
+
+  if (reason === "google-existing-account") {
+    return "A Gridworld account already exists for that Google address. Sign in instead.";
+  }
+
+  if (reason === "oauth-cancelled") {
+    return isSignIn ? "Google sign-in was cancelled." : "Google account creation was cancelled.";
+  }
+
+  return "";
+}
+
+function getAuthErrorCode(error: unknown) {
+  if (
+    error &&
+    typeof error === "object" &&
+    "errors" in error &&
+    Array.isArray(error.errors) &&
+    error.errors[0] &&
+    typeof error.errors[0] === "object" &&
+    "code" in error.errors[0]
+  ) {
+    return String(error.errors[0].code);
+  }
+
+  return "";
 }
