@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
-import { SignInButton, SignOutButton, SignUpButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 
 export function SiteNav({ hasAccessToken = false }: { hasAccessToken?: boolean }) {
   const { isSignedIn, user } = useUser();
@@ -21,16 +21,12 @@ export function SiteNav({ hasAccessToken = false }: { hasAccessToken?: boolean }
         <div className="navbar-account-area">
           {!isSignedIn ? (
             <div className="auth-buttons">
-              <SignInButton mode="redirect" fallbackRedirectUrl="/">
-                <button type="button" className="legacy-button">
-                  Login
-                </button>
-              </SignInButton>
-              <SignUpButton mode="redirect" fallbackRedirectUrl="/">
-                <button type="button" className="legacy-button">
-                  Create Account
-                </button>
-              </SignUpButton>
+              <Link href="/sign-in" className="legacy-button">
+                Login
+              </Link>
+              <Link href="/sign-up" className="legacy-button">
+                Create Account
+              </Link>
             </div>
           ) : (
             <div className="logged-in-buttons">

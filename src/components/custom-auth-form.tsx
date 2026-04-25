@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 
 type AuthMode = "sign-in" | "sign-up";
@@ -22,21 +22,33 @@ export function CustomAuthForm({ mode, initialReason }: CustomAuthFormProps) {
   const router = useRouter();
   const signInState = useSignIn();
   const signUpState = useSignUp();
+  const isSignIn = mode === "sign-in";
   const [step, setStep] = useState<AuthStep>("email");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [initialNotice, setInitialNotice] = useState(() => getAuthNotice(initialReason, isSignIn));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isLoaded = signInState.isLoaded && signUpState.isLoaded;
-  const isSignIn = mode === "sign-in";
   const title = isSignIn ? "Sign in to Gridworld Streaming" : "Create your Gridworld Streaming account";
   const subtitle = isSignIn ? "Enter your email to continue." : "Use your email to start an account.";
   const googleLabel = isSignIn ? "Sign in with Google" : "Create account with Google";
   const alternateHref = isSignIn ? "/sign-up" : "/sign-in";
   const alternateText = isSignIn ? "Need an account?" : "Already have an account?";
   const alternateAction = isSignIn ? "Create one" : "Sign in";
-  const notice = error || getAuthNotice(initialReason, isSignIn);
+  const notice = error || initialNotice;
+
+  useEffect(() => {
+    if (!initialReason) {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("auth_reason");
+    const search = url.searchParams.toString();
+    window.history.replaceState(window.history.state, "", `${url.pathname}${search ? `?${search}` : ""}${url.hash}`);
+  }, [initialReason]);
 
   const finishAuth = async (sessionId: string | null | undefined) => {
     if (!sessionId) {
@@ -210,6 +222,7 @@ export function CustomAuthForm({ mode, initialReason }: CustomAuthFormProps) {
 
   const submit = async (action: () => Promise<void>) => {
     setError("");
+    setInitialNotice("");
     setIsSubmitting(true);
 
     try {
