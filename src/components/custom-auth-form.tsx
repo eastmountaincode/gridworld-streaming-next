@@ -181,16 +181,22 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
     }
 
     await submit(async () => {
-      const params = {
-        strategy: "oauth_google" as const,
-        redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
-      };
-
       if (isSignIn) {
-        await signInState.signIn.authenticateWithRedirect(params);
+        await signInState.signIn.authenticateWithRedirect({
+          strategy: "oauth_google",
+          redirectUrl: "/sso-callback?flow=sign-in",
+          redirectUrlComplete: "/",
+          continueSignIn: true,
+          continueSignUp: false,
+        });
       } else {
-        await signUpState.signUp.authenticateWithRedirect(params);
+        await signUpState.signUp.authenticateWithRedirect({
+          strategy: "oauth_google",
+          redirectUrl: "/sso-callback?flow=sign-up",
+          redirectUrlComplete: "/",
+          continueSignIn: false,
+          continueSignUp: true,
+        });
       }
     });
   };
