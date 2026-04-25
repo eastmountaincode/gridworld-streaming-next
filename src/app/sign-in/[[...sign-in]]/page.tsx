@@ -1,17 +1,9 @@
-import { SignIn } from "@clerk/nextjs";
-
-import { gridworldClerkAppearance } from "@/lib/clerk-appearance";
+import { CustomAuthForm } from "@/components/custom-auth-form";
 
 export default function SignInPage() {
   return (
     <main className="auth-page">
-      <SignIn
-        appearance={gridworldClerkAppearance}
-        routing="path"
-        path="/sign-in"
-        signUpUrl="/sign-up"
-        fallbackRedirectUrl="/"
-      />
+      <CustomAuthForm mode="sign-in" />
     </main>
   );
 }

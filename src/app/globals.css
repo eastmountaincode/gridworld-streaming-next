@@ -153,108 +153,155 @@ audio {
   padding: 48px 20px;
 }
 
-.gridworld-clerk-root {
+.custom-auth-card {
+  background: white;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: black;
+  padding: 28px;
   width: min(100%, 420px);
 }
 
-.gridworld-clerk-card-box,
-.gridworld-clerk-card {
-  border-radius: 6px !important;
-  box-shadow: none !important;
+.custom-auth-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.custom-auth-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0 0 8px;
+}
+
+.custom-auth-header p {
+  color: #555555;
+  margin: 0;
+}
+
+.custom-auth-google,
+.custom-auth-submit {
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: black;
+  display: inline-flex;
+  font: inherit;
+  gap: 10px;
+  justify-content: center;
+  min-height: 34px;
+  padding: 7px 15px;
+  text-decoration: none;
+  transition: opacity 0.2s;
   width: 100%;
 }
 
-.gridworld-clerk-card {
-  border: 1px solid black !important;
-  padding: 28px !important;
+.custom-auth-google {
+  background: white;
 }
 
-.gridworld-clerk-title {
-  color: black !important;
-  font-family: var(--font-goga), sans-serif !important;
-  font-size: 22px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0 !important;
+.custom-auth-google span {
+  font-weight: 700;
 }
 
-.gridworld-clerk-subtitle,
-.gridworld-clerk-label,
-.gridworld-clerk-footer-text,
-.gridworld-clerk-divider-text {
-  color: black !important;
-  font-family: var(--font-goga), sans-serif !important;
-  letter-spacing: 0 !important;
+.custom-auth-submit {
+  background: slategray;
+  margin-top: 12px;
 }
 
-.gridworld-clerk-label {
-  font-size: 14px !important;
+.custom-auth-google:hover,
+.custom-auth-submit:hover,
+.custom-auth-back:hover,
+.custom-auth-footer a:hover {
+  opacity: 0.75;
 }
 
-.gridworld-clerk-input {
-  background: white !important;
-  border: 1px solid black !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
-  color: black !important;
-  font-family: var(--font-goga), sans-serif !important;
+.custom-auth-google:disabled,
+.custom-auth-submit:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
-.gridworld-clerk-input:focus {
-  border-color: black !important;
-  box-shadow: 0 0 0 2px rgb(0 0 0 / 12%) !important;
+.custom-auth-divider {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  margin: 22px 0;
 }
 
-.gridworld-clerk-primary-button,
-.gridworld-clerk-social-button {
-  border: 1px solid black !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
-  font-family: var(--font-goga), sans-serif !important;
-  letter-spacing: 0 !important;
-  transition: opacity 0.2s !important;
+.custom-auth-divider span {
+  background: black;
+  flex: 1;
+  height: 1px;
+  opacity: 0.25;
 }
 
-.gridworld-clerk-primary-button {
-  background: slategray !important;
-  color: black !important;
+.custom-auth-divider p {
+  margin: 0;
 }
 
-.gridworld-clerk-social-button {
-  background: white !important;
-  color: black !important;
+.custom-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.gridworld-clerk-primary-button:hover,
-.gridworld-clerk-social-button:hover,
-.gridworld-clerk-footer-link:hover,
-.gridworld-clerk-link:hover {
-  opacity: 0.75 !important;
+.custom-auth-form label {
+  font-size: 14px;
 }
 
-.gridworld-clerk-divider-line {
-  background: black !important;
-  opacity: 0.25 !important;
+.custom-auth-form input {
+  background: white;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: black;
+  font: inherit;
+  min-height: 34px;
+  padding: 7px 10px;
+  width: 100%;
 }
 
-.gridworld-clerk-footer {
-  background: white !important;
-  border-top: 1px solid rgb(0 0 0 / 18%) !important;
-  border-radius: 0 0 6px 6px !important;
+.custom-auth-form input:focus {
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 12%);
+  outline: none;
 }
 
-.gridworld-clerk-footer-link,
-.gridworld-clerk-link {
-  color: black !important;
-  font-family: var(--font-goga), sans-serif !important;
-  text-decoration: underline !important;
-  text-underline-offset: 2px !important;
-  transition: opacity 0.2s !important;
+.custom-auth-back {
+  align-self: flex-start;
+  background: transparent;
+  border: 0;
+  color: black;
+  font: inherit;
+  margin: 0 0 6px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
 }
 
-.gridworld-clerk-identity-preview {
-  border: 1px solid black !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
+.custom-auth-error {
+  border: 1px dashed black;
+  color: #8b0000;
+  margin: 14px 0 0;
+  padding: 10px;
+}
+
+.custom-auth-footer {
+  border-top: 1px solid rgb(0 0 0 / 18%);
+  margin: 24px -28px -28px;
+  padding: 16px 28px;
+  text-align: center;
+}
+
+.custom-auth-footer a {
+  color: black;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
 }
 
 .user-status-icon {
