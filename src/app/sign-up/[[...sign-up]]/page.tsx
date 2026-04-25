@@ -1,9 +1,12 @@
 import { SignUp } from "@clerk/nextjs";
 
+import { gridworldClerkAppearance } from "@/lib/clerk-appearance";
+
 export default function SignUpPage() {
   return (
-    <main className="flex min-h-[70vh] items-center justify-center bg-[var(--legacy-orange)] px-5 py-16">
+    <main className="auth-page">
       <SignUp
+        appearance={gridworldClerkAppearance}
         routing="path"
         path="/sign-up"
         signInUrl="/sign-in"

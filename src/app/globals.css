@@ -144,6 +144,119 @@ audio {
   display: none;
 }
 
+.auth-page {
+  align-items: center;
+  background-color: var(--legacy-orange);
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 110px);
+  padding: 48px 20px;
+}
+
+.gridworld-clerk-root {
+  width: min(100%, 420px);
+}
+
+.gridworld-clerk-card-box,
+.gridworld-clerk-card {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+
+.gridworld-clerk-card {
+  border: 1px solid black !important;
+  padding: 28px !important;
+}
+
+.gridworld-clerk-title {
+  color: black !important;
+  font-family: var(--font-goga), sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+.gridworld-clerk-subtitle,
+.gridworld-clerk-label,
+.gridworld-clerk-footer-text,
+.gridworld-clerk-divider-text {
+  color: black !important;
+  font-family: var(--font-goga), sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+.gridworld-clerk-label {
+  font-size: 14px !important;
+}
+
+.gridworld-clerk-input {
+  background: white !important;
+  border: 1px solid black !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  color: black !important;
+  font-family: var(--font-goga), sans-serif !important;
+}
+
+.gridworld-clerk-input:focus {
+  border-color: black !important;
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 12%) !important;
+}
+
+.gridworld-clerk-primary-button,
+.gridworld-clerk-social-button {
+  border: 1px solid black !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  font-family: var(--font-goga), sans-serif !important;
+  letter-spacing: 0 !important;
+  transition: opacity 0.2s !important;
+}
+
+.gridworld-clerk-primary-button {
+  background: slategray !important;
+  color: black !important;
+}
+
+.gridworld-clerk-social-button {
+  background: white !important;
+  color: black !important;
+}
+
+.gridworld-clerk-primary-button:hover,
+.gridworld-clerk-social-button:hover,
+.gridworld-clerk-footer-link:hover,
+.gridworld-clerk-link:hover {
+  opacity: 0.75 !important;
+}
+
+.gridworld-clerk-divider-line {
+  background: black !important;
+  opacity: 0.25 !important;
+}
+
+.gridworld-clerk-footer {
+  background: white !important;
+  border-top: 1px solid rgb(0 0 0 / 18%) !important;
+  border-radius: 0 0 6px 6px !important;
+}
+
+.gridworld-clerk-footer-link,
+.gridworld-clerk-link {
+  color: black !important;
+  font-family: var(--font-goga), sans-serif !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+  transition: opacity 0.2s !important;
+}
+
+.gridworld-clerk-identity-preview {
+  border: 1px solid black !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
 .user-status-icon {
   height: 50px;
   width: auto;
