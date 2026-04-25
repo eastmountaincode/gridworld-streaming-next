@@ -83,6 +83,7 @@ function AudioPlayer({
   } = useAudioPlayer();
   const progressRef = useRef<HTMLDivElement | null>(null);
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
+  const [dragPreviewTime, setDragPreviewTime] = useState<number | null>(null);
   const isActiveShelf = activeShelfId === album.id;
   const activeTrackIndex = currentTracklist.findIndex((track) => track.id === currentTrack?.id);
   const hasPreviousTrack = isActiveShelf && activeTrackIndex > 0;
@@ -119,14 +120,14 @@ function AudioPlayer({
     }
   };
 
-  const updateProgressFromPointer = (clientX: number) => {
+  const getTimeFromPointer = (clientX: number) => {
     if (!canSeek || !progressRef.current) {
-      return;
+      return null;
     }
 
     const rect = progressRef.current.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    setAudioTime(ratio * totalDuration);
+    return ratio * totalDuration;
   };
 
   const handleProgressPointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -137,7 +138,7 @@ function AudioPlayer({
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     setIsDraggingProgress(true);
-    updateProgressFromPointer(event.clientX);
+    setDragPreviewTime(getTimeFromPointer(event.clientX));
   };
 
   const handleProgressPointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -145,15 +146,32 @@ function AudioPlayer({
       return;
     }
 
-    updateProgressFromPointer(event.clientX);
+    setDragPreviewTime(getTimeFromPointer(event.clientX));
   };
 
-  const handleProgressPointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+  const releaseProgressPointer = (event: PointerEvent<HTMLDivElement>) => {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
+  };
+
+  const handleProgressPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    releaseProgressPointer(event);
+
+    const seekTime = getTimeFromPointer(event.clientX) ?? dragPreviewTime;
+
+    if (seekTime !== null) {
+      setAudioTime(seekTime);
+    }
 
     setIsDraggingProgress(false);
+    setDragPreviewTime(null);
+  };
+
+  const handleProgressPointerCancel = (event: PointerEvent<HTMLDivElement>) => {
+    releaseProgressPointer(event);
+    setIsDraggingProgress(false);
+    setDragPreviewTime(null);
   };
 
   const handleProgressKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -185,7 +203,8 @@ function AudioPlayer({
     }
   };
 
-  const progress = isActiveShelf && totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
+  const displayedTime = isActiveShelf ? (dragPreviewTime ?? currentTime) : 0;
+  const progress = isActiveShelf && totalDuration > 0 ? (displayedTime / totalDuration) * 100 : 0;
 
   return (
     <div className="audio-player">
@@ -224,24 +243,24 @@ function AudioPlayer({
             <div
               ref={progressRef}
               className={`progress-bar ${isActiveShelf ? "" : "progress-bar-inactive"}`}
-              onPointerCancel={handleProgressPointerEnd}
+              onPointerCancel={handleProgressPointerCancel}
               onPointerDown={handleProgressPointerDown}
               onPointerMove={handleProgressPointerMove}
-              onPointerUp={handleProgressPointerEnd}
+              onPointerUp={handleProgressPointerUp}
               onKeyDown={handleProgressKeyDown}
               role="slider"
               tabIndex={canSeek ? 0 : -1}
               aria-label="Track position"
               aria-valuemin={0}
               aria-valuemax={Math.round(totalDuration)}
-              aria-valuenow={Math.round(isActiveShelf ? currentTime : 0)}
+              aria-valuenow={Math.round(displayedTime)}
               aria-disabled={!canSeek}
             >
               <div className="progress-bar-fill" style={{ width: `${progress}%`, backgroundColor: shelfcolor }} />
               <div className="progress-bar-thumb" style={{ left: `${progress}%`, backgroundColor: shelfcolor }} />
             </div>
             <div className="progress-bar-timestamps">
-              <span>{formatDuration(isActiveShelf ? currentTime : 0)}</span>
+              <span>{formatDuration(displayedTime)}</span>
               <span>{formatDuration(isActiveShelf ? totalDuration : 0)}</span>
             </div>
           </div>
