@@ -64,10 +64,7 @@ export function CustomAuthForm({ mode, initialReason }: CustomAuthFormProps) {
 
     await submit(async () => {
       if (isSignIn) {
-        const result = await signInState.signIn.create({
-          identifier: emailAddress.trim(),
-          signUpIfMissing: false,
-        });
+        const result = await signInState.signIn.create({ identifier: emailAddress.trim() });
 
         if (result.status === "complete") {
           await finishAuth(result.createdSessionId);
@@ -200,16 +197,12 @@ export function CustomAuthForm({ mode, initialReason }: CustomAuthFormProps) {
           strategy: "oauth_google",
           redirectUrl: "/sso-callback?flow=sign-in",
           redirectUrlComplete: "/",
-          continueSignIn: true,
-          continueSignUp: false,
         });
       } else {
         await signUpState.signUp.authenticateWithRedirect({
           strategy: "oauth_google",
           redirectUrl: "/sso-callback?flow=sign-up",
           redirectUrlComplete: "/",
-          continueSignIn: false,
-          continueSignUp: true,
         });
       }
     });
@@ -356,6 +349,10 @@ function getAuthErrorMessage(error: unknown) {
     return "An account already exists for that email. Sign in instead.";
   }
 
+  if (isUnsupportedClerkResponse(error)) {
+    return "No account exists for that email yet. Create an account to continue.";
+  }
+
   if (
     error &&
     typeof error === "object" &&
@@ -405,4 +402,9 @@ function getAuthErrorCode(error: unknown) {
   }
 
   return "";
+}
+
+function isUnsupportedClerkResponse(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+  return message.includes("ClerkJS: Response: 0 not supported yet");
 }
