@@ -60,17 +60,29 @@ export async function getMediaObject(key: string, range?: ByteRange): Promise<Me
 }
 
 export function getRequiredEnv(name: string): string {
-  let value: unknown = process.env[name as string];
+  const value = getOptionalEnv(name);
 
-  if (typeof value !== "string" || value.length === 0) {
-    value = getEnv()[name];
-  }
-
-  if (typeof value !== "string" || value.length === 0) {
+  if (!value) {
     throw new Error(`Missing required Cloudflare env var: ${String(name)}`);
   }
 
   return value;
+}
+
+export function getOptionalEnv(name: string): string | undefined {
+  const processValue = process.env[name as string];
+
+  if (typeof processValue === "string" && processValue.length > 0) {
+    return processValue;
+  }
+
+  const envValue = getEnv()[name];
+
+  if (typeof envValue === "string" && envValue.length > 0) {
+    return envValue;
+  }
+
+  return undefined;
 }
 
 export type ByteRange = { offset: number; length?: number };
