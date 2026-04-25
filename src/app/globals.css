@@ -382,7 +382,7 @@ audio {
 }
 
 .play-icon {
-  transform: translateX(1px);
+  transform: translateX(-5px);
 }
 
 .header-play-button .player-icon {
@@ -433,6 +433,8 @@ audio {
   margin: 10px 0;
   overflow: visible;
   position: relative;
+  touch-action: none;
+  user-select: none;
   width: 100%;
 }
 
@@ -448,14 +450,23 @@ audio {
 }
 
 .progress-bar-thumb {
+  aspect-ratio: 1 / 1;
   border: 1px solid black;
   border-radius: 50%;
+  box-sizing: border-box;
   box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+  flex: 0 0 18px;
   height: 18px;
+  max-height: 18px;
+  max-width: 18px;
+  min-height: 18px;
+  min-width: 18px;
+  pointer-events: none;
   position: absolute;
-  top: -4.7px;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 18px;
+  will-change: left;
   z-index: 2;
 }
 

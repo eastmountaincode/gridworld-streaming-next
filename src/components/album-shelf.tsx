@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { type CSSProperties, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, type PointerEvent, useMemo, useRef, useState } from "react";
 import { ChevronDown, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 
 import { useAudioPlayer } from "@/components/audio-player-context";
@@ -82,10 +82,12 @@ function AudioPlayer({
     totalDuration,
   } = useAudioPlayer();
   const progressRef = useRef<HTMLDivElement | null>(null);
+  const [isDraggingProgress, setIsDraggingProgress] = useState(false);
   const isActiveShelf = activeShelfId === album.id;
   const activeTrackIndex = currentTracklist.findIndex((track) => track.id === currentTrack?.id);
   const hasPreviousTrack = isActiveShelf && activeTrackIndex > 0;
   const hasNextTrack = isActiveShelf && activeTrackIndex >= 0 && activeTrackIndex < currentTracklist.length - 1;
+  const canSeek = isActiveShelf && totalDuration > 0;
 
   const handlePlayPause = (track: TrackSummary) => {
     if (currentTrack?.id === track.id && isPlaying) {
@@ -118,13 +120,69 @@ function AudioPlayer({
   };
 
   const updateProgressFromPointer = (clientX: number) => {
-    if (!isActiveShelf || !progressRef.current || totalDuration <= 0) {
+    if (!canSeek || !progressRef.current) {
       return;
     }
 
     const rect = progressRef.current.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     setAudioTime(ratio * totalDuration);
+  };
+
+  const handleProgressPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (!canSeek) {
+      return;
+    }
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setIsDraggingProgress(true);
+    updateProgressFromPointer(event.clientX);
+  };
+
+  const handleProgressPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingProgress) {
+      return;
+    }
+
+    updateProgressFromPointer(event.clientX);
+  };
+
+  const handleProgressPointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    setIsDraggingProgress(false);
+  };
+
+  const handleProgressKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!canSeek) {
+      return;
+    }
+
+    const smallStep = 5;
+    const largeStep = 15;
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      setAudioTime(Math.max(0, currentTime - smallStep));
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      setAudioTime(Math.min(totalDuration, currentTime + smallStep));
+    } else if (event.key === "PageDown") {
+      event.preventDefault();
+      setAudioTime(Math.max(0, currentTime - largeStep));
+    } else if (event.key === "PageUp") {
+      event.preventDefault();
+      setAudioTime(Math.min(totalDuration, currentTime + largeStep));
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      setAudioTime(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      setAudioTime(totalDuration);
+    }
   };
 
   const progress = isActiveShelf && totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
@@ -166,7 +224,18 @@ function AudioPlayer({
             <div
               ref={progressRef}
               className={`progress-bar ${isActiveShelf ? "" : "progress-bar-inactive"}`}
-              onClick={(event) => updateProgressFromPointer(event.clientX)}
+              onPointerCancel={handleProgressPointerEnd}
+              onPointerDown={handleProgressPointerDown}
+              onPointerMove={handleProgressPointerMove}
+              onPointerUp={handleProgressPointerEnd}
+              onKeyDown={handleProgressKeyDown}
+              role="slider"
+              tabIndex={canSeek ? 0 : -1}
+              aria-label="Track position"
+              aria-valuemin={0}
+              aria-valuemax={Math.round(totalDuration)}
+              aria-valuenow={Math.round(isActiveShelf ? currentTime : 0)}
+              aria-disabled={!canSeek}
             >
               <div className="progress-bar-fill" style={{ width: `${progress}%`, backgroundColor: shelfcolor }} />
               <div className="progress-bar-thumb" style={{ left: `${progress}%`, backgroundColor: shelfcolor }} />
