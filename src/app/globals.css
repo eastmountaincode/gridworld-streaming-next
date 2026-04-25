@@ -382,7 +382,8 @@ audio {
 }
 
 .play-icon {
-  transform: translateX(-5px);
+  position: relative;
+  right: 2px;
 }
 
 .header-play-button .player-icon {
