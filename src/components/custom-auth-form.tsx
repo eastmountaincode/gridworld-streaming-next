@@ -345,7 +345,7 @@ function getAuthErrorMessage(error: unknown) {
   const code = getAuthErrorCode(error);
 
   if (code === "form_identifier_not_found" || code === "external_account_not_found") {
-    return "No Gridworld account exists for that email yet. Create an account to continue.";
+    return "No account exists for that email yet. Create an account to continue.";
   }
 
   if (
@@ -353,7 +353,7 @@ function getAuthErrorMessage(error: unknown) {
     code === "form_identifier_exists__email_address" ||
     code === "identifier_already_exists"
   ) {
-    return "A Gridworld account already exists for that email. Sign in instead.";
+    return "An account already exists for that email. Sign in instead.";
   }
 
   if (
@@ -377,11 +377,11 @@ function getAuthErrorMessage(error: unknown) {
 
 function getAuthNotice(reason: string | undefined, isSignIn: boolean) {
   if (reason === "google-no-account") {
-    return "No Gridworld account is connected to that Google address yet. Create an account to continue.";
+    return "No account exists for that email yet. Create an account to continue.";
   }
 
   if (reason === "google-existing-account") {
-    return "A Gridworld account already exists for that Google address. Sign in instead.";
+    return "An account already exists for that email. Sign in instead.";
   }
 
   if (reason === "oauth-cancelled") {
