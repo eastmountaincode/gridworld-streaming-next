@@ -325,12 +325,19 @@ audio {
   margin-top: 20px;
 }
 
+.buy-access-module {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
 .buy-access-token {
   align-items: center;
   display: inline-flex;
   gap: 5px;
   justify-content: center;
-  margin: 0 auto 20px;
   position: relative;
 }
 
@@ -348,8 +355,9 @@ audio {
 
 .buy-access-error {
   font-size: 14px;
-  margin: 6px auto 0;
+  margin: 0 auto;
   max-width: 340px;
+  text-align: center;
 }
 
 .audio-shelf-container,

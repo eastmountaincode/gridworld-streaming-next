@@ -35,16 +35,18 @@ export function BuyAccessButton() {
   }
 
   return (
-    <div className="buy-access-token">
-      <button
-        type="button"
-        onClick={startCheckout}
-        disabled={isLoading}
-        className="legacy-button buy-access-button"
-      >
-        {isLoading ? "Opening Stripe..." : "Buy Access Token"}
-      </button>
-      <img src="/images/access_token/bounce_2.gif" alt="Token" className="buy-token-image" />
+    <div className="buy-access-module">
+      <div className="buy-access-token">
+        <button
+          type="button"
+          onClick={startCheckout}
+          disabled={isLoading}
+          className="legacy-button buy-access-button"
+        >
+          {isLoading ? "Opening Stripe..." : "Buy Access Token"}
+        </button>
+        <img src="/images/access_token/bounce_2.gif" alt="Token" className="buy-token-image" />
+      </div>
       {error ? <p className="buy-access-error">{error}</p> : null}
     </div>
   );
