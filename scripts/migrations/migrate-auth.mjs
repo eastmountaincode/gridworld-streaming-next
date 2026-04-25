@@ -30,6 +30,7 @@ async function main() {
     outDir: path.resolve(String(args["out-dir"] ?? DEFAULT_OUT_DIR)),
     limit: args.limit === undefined ? undefined : Number(args.limit),
     delayMs: Number(args["delay-ms"] ?? 250),
+    requireLive: Boolean(args["require-live"]),
   };
 
   if (options.limit !== undefined && (!Number.isInteger(options.limit) || options.limit < 1)) {
@@ -64,6 +65,10 @@ async function main() {
 
   if (!secretKey || secretKey.includes("replace_me")) {
     throw new Error(`Missing CLERK_SECRET_KEY. Set it in the environment or ${options.clerkEnvPath}.`);
+  }
+
+  if (options.requireLive && !secretKey.startsWith("sk_live_")) {
+    throw new Error("This migration requires a live Clerk secret key. Set CLERK_SECRET_KEY=sk_live_... in the shell.");
   }
 
   await mkdir(options.outDir, { recursive: true });

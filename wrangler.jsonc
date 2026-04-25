@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "gridworld-streaming-next",
   "main": ".open-next/worker.js",
+  "workers_dev": true,
   "compatibility_date": "2026-04-22",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -15,7 +16,7 @@
     {
       "binding": "DB",
       "database_name": "gridworld-streaming",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "0c8a6447-e7bd-40c0-bb1a-1f7feac90020",
       "migrations_dir": "migrations"
     }
   ],
@@ -26,6 +27,7 @@
     }
   ],
   "vars": {
-    "NEXT_PUBLIC_APP_URL": "http://localhost:3000"
+    "NEXT_PUBLIC_APP_URL": "https://www.gridworldstreaming.com",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_Y2xlcmsuZ3JpZHdvcmxkc3RyZWFtaW5nLmNvbSQ"
   }
 }

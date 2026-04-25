@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${goga.variable} ${alcala.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[#f4a126] text-black">
+      <body className="min-h-full bg-[var(--legacy-orange)] text-black">
         <ClerkProvider
           signInUrl="/sign-in"
           signUpUrl="/sign-up"

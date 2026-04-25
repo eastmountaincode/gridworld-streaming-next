@@ -17,7 +17,7 @@ Modern rebuild of the old Gridworld Streaming React app using Next.js, Clerk, Cl
 - `npm run db:migrate:local` applies D1 migrations locally.
 - `npm run db:migrate:remote` applies D1 migrations remotely.
 - `npm run auth:migrate:apply` imports legacy users into the configured Clerk environment.
-- `npm run auth:migrate:prod:apply` imports legacy users into live Clerk using `.env.local`.
+- `CLERK_SECRET_KEY=sk_live_... npm run auth:migrate:prod:apply` imports legacy users into live Clerk.
 
 ## Migration Notes
 

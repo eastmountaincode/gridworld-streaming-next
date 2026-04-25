@@ -252,12 +252,20 @@ function DownloadArea({ album, shelfcolor }: { album: AlbumSummary; shelfcolor: 
 
   return (
     <div className="download-area">
-      <p>{album.downloadable.label}</p>
-      {album.downloadable.description ? <span>{album.downloadable.description}</span> : null}
+      <div className="download-heading">
+        <h3>Download</h3>
+        <p>{album.downloadable.label}</p>
+      </div>
+      {album.downloadable.description ? <span className="download-description">{album.downloadable.description}</span> : null}
       <div className="download-format-list">
         {album.downloadable.formats.map((format) => (
-          <a key={format.format} href={format.url} style={{ backgroundColor: shelfcolor }}>
-            {format.format}
+          <a
+            key={format.format}
+            href={format.url}
+            style={{ backgroundColor: shelfcolor }}
+            aria-label={`Download ${album.downloadable?.label ?? album.title} as ${format.format.toUpperCase()}`}
+          >
+            Download {format.format.toUpperCase()}
           </a>
         ))}
       </div>

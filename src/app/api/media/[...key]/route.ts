@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import { getMediaBucket } from "@/lib/cloudflare";
+import { getMediaObject, type ByteRange } from "@/lib/cloudflare";
 import { getObjectAccessLevel } from "@/lib/content";
 import { getProfileByClerkId } from "@/lib/profiles";
 
@@ -38,9 +38,7 @@ export async function GET(request: Request, context: RouteContext) {
     return localMediaResponse(key, accessLevel, requestedRange);
   }
 
-  const object = await getMediaBucket().get(key, {
-    range: requestedRange,
-  });
+  const object = await getMediaObject(key, requestedRange);
 
   if (!object) {
     return NextResponse.json({ error: "Media object not found." }, { status: 404 });
@@ -61,8 +59,6 @@ export async function GET(request: Request, context: RouteContext) {
 
   return new Response(object.body, { headers });
 }
-
-type ByteRange = { offset: number; length?: number };
 
 function parseRange(range: string): ByteRange | undefined {
   const match = range.match(/^bytes=(\d+)-(\d+)?$/);

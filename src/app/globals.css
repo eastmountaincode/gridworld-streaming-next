@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4a126;
+  --legacy-orange: #ffa500;
+  --background: var(--legacy-orange);
   --foreground: #111111;
   --ink: #111111;
   --paper: #ffe1a3;
-  --ember: #f4a126;
+  --ember: var(--legacy-orange);
   --space-1: 5px;
   --space-2: 10px;
   --space-3: 12px;
@@ -45,7 +46,7 @@ audio {
 
 .main-nav {
   align-items: center;
-  background-color: orange;
+  background-color: var(--legacy-orange);
   display: flex;
   height: 110px;
   width: 100%;
@@ -123,7 +124,7 @@ audio {
 }
 
 .account-button {
-  background-color: orange;
+  background-color: var(--legacy-orange);
   max-width: min(550px, 55vw);
 }
 
@@ -149,7 +150,7 @@ audio {
 }
 
 .default-home {
-  background-color: orange;
+  background-color: var(--legacy-orange);
   min-height: calc(100vh - 110px);
   padding-bottom: 30px;
   padding-top: 25px;
@@ -214,7 +215,7 @@ audio {
 }
 
 .about-collapse {
-  background-color: orange;
+  background-color: var(--legacy-orange);
   border-radius: 1px;
   margin-bottom: 20px;
 }
@@ -476,7 +477,7 @@ audio {
 }
 
 .playlist-item {
-  background-color: orange;
+  background-color: var(--legacy-orange);
   border: 1px solid black;
   border-radius: 6px;
   margin: 10px;
@@ -530,9 +531,28 @@ audio {
   text-align: left;
 }
 
-.download-area p {
+.download-heading {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.download-heading h3 {
+  font-family: var(--font-goga), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.download-heading p {
   font-weight: 700;
-  margin: 0 0 4px;
+  margin: 0;
+}
+
+.download-description {
+  display: block;
+  margin-top: 4px;
 }
 
 .download-format-list {
@@ -546,6 +566,7 @@ audio {
   border: 1px solid black;
   border-radius: 6px;
   color: black;
+  font-weight: 700;
   padding: 5px 10px;
   text-decoration: none;
 }
@@ -604,7 +625,7 @@ audio {
 }
 
 .account-page {
-  background-color: orange;
+  background-color: var(--legacy-orange);
   margin: 0;
   min-height: calc(100vh - 110px);
   padding: 20px;

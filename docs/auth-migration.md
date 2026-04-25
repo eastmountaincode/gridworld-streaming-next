@@ -55,11 +55,11 @@ development/test instance does not create users in production, and the generated
 `profiles.sql` contains Clerk user ids for only the environment used during that
 run.
 
-Set `CLERK_SECRET_KEY` in `.env.local` to the live `sk_live_...` key, then run
-the production import into a separate output directory:
+Keep `.env.local` on test Clerk keys for local development. For production, pass
+the live `sk_live_...` key only for the import command:
 
 ```bash
-npm run auth:migrate:prod:apply
+CLERK_SECRET_KEY='sk_live_...' npm run auth:migrate:prod:apply
 ```
 
 The script is idempotent for Clerk users:
