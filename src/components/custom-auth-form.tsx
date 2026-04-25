@@ -249,6 +249,14 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
             onChange={(event) => setEmailAddress(event.target.value)}
             required
           />
+          {!isSignIn ? (
+            <div
+              id="clerk-captcha"
+              className="custom-auth-captcha"
+              data-cl-theme="light"
+              data-cl-size="flexible"
+            />
+          ) : null}
           <button type="submit" className="custom-auth-submit" disabled={!isLoaded || isSubmitting}>
             Continue
           </button>
@@ -269,6 +277,14 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
+          {!isSignIn ? (
+            <div
+              id="clerk-captcha"
+              className="custom-auth-captcha"
+              data-cl-theme="light"
+              data-cl-size="flexible"
+            />
+          ) : null}
           <button type="submit" className="custom-auth-submit" disabled={!isLoaded || isSubmitting}>
             {isSignIn ? "Sign in" : "Create account"}
           </button>

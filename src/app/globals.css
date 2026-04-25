@@ -270,6 +270,10 @@ audio {
   outline: none;
 }
 
+.custom-auth-captcha {
+  min-height: 1px;
+}
+
 .custom-auth-back {
   align-self: flex-start;
   background: transparent;
