@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   }
 
   const profile = await ensureCurrentProfile();
-  const appUrl = getOptionalEnv("NEXT_PUBLIC_APP_URL") ?? new URL(request.url).origin;
+  const appUrl = getCheckoutAppUrl(request);
 
   const session = await getStripe().checkout.sessions.create({
     line_items: [
@@ -38,4 +38,14 @@ export async function POST(request: Request) {
 
 function getAccessTokenPriceId() {
   return getOptionalEnv("STRIPE_ACCESS_PRICE_ID") ?? getRequiredEnv("ACCESS_TOKEN_PRICE_ID");
+}
+
+function getCheckoutAppUrl(request: Request) {
+  const requestOrigin = new URL(request.url).origin;
+
+  if (process.env.NODE_ENV === "development") {
+    return requestOrigin;
+  }
+
+  return getOptionalEnv("NEXT_PUBLIC_APP_URL") ?? requestOrigin;
 }
