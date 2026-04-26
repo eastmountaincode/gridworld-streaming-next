@@ -22,8 +22,9 @@ export async function POST(request: Request) {
         quantity: 1,
       },
     ],
+    client_reference_id: userId,
     mode: "payment",
-    success_url: `${appUrl}/payment-result?status=success`,
+    success_url: `${appUrl}/payment-result?status=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${appUrl}/payment-result?status=cancel`,
     metadata: {
       clerkUserId: userId,
