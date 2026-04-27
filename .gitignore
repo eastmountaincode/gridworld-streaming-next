@@ -49,3 +49,5 @@ cloudflare-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+notes.txt
